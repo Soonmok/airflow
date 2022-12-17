@@ -131,12 +131,12 @@ class TestTriggerDag:
     def test_trigger_dag_with_logical_date_earlier_than_start_date(self, dag_bag_mock):
         dag_id = "trigger_dag_with_logical_date_earlier_than_start_date"
         execution_date = timezone.datetime(2022, 11, 1, 10, 10, 0)
-        conf = {"logical_date": execution_date}
-        dag = DAG(dag_id, default_args={'start_date': timezone.datetime(2022, 12, 1, 10, 10, 0)})
+        dag = DAG(dag_id, default_args={'start_date': timezone.datetime(2022, 12, 1, 10, 10, 0),
+                                        'execution_date': execution_date})
         dag_bag_mock.dags = [dag_id]
         dag_bag_mock.get_dag.return_value = dag
         dag_bag_mock.dags_hash = {}
         with pytest.raises(ValueError):
-            _trigger_dag(dag_id, dag_bag_mock, conf=conf)
+            _trigger_dag(dag_id, dag_bag_mock)
         with pytest.raises(ValueError):
             _trigger_dag(dag_id, dag_bag_mock, execution_date=execution_date)

@@ -52,8 +52,8 @@ def _trigger_dag(
         raise DagNotFound(f"Dag id {dag_id} not found")
 
     if execution_date is None:
-        if conf and "logical_date" in conf:
-            execution_date = conf["logical_date"]
+        if dag.default_args and "execution_date" in dag.default_args:
+            execution_date = dag.default_args["execution_date"]
         else:
             execution_date = timezone.utcnow()
 
